@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Settings, Save, Home } from 'lucide-react';
 import type { GameState, DiceRoll } from '../types';
 import Dice from './Dice';
@@ -47,6 +47,7 @@ export default function GamePlay({ gameState, onRoll, onSave, onHome, onSettings
         <h1 className="text-2xl font-bold">{gameState.settings.gameName}</h1>
         <div className="flex gap-4">
           <button
+            type="button"
             onClick={onSettings}
             className="p-2 hover:bg-gray-100 rounded-full"
             title="Paramètres"
@@ -54,6 +55,7 @@ export default function GamePlay({ gameState, onRoll, onSave, onHome, onSettings
             <Settings size={24} />
           </button>
           <button
+            type="button"
             onClick={handleSave}
             className="p-2 hover:bg-gray-100 rounded-full"
             title="Sauvegarder"
@@ -61,6 +63,7 @@ export default function GamePlay({ gameState, onRoll, onSave, onHome, onSettings
             <Save size={24} />
           </button>
           <button
+            type="button"
             onClick={onHome}
             className="p-2 hover:bg-gray-100 rounded-full"
             title="Menu principal"
@@ -85,7 +88,7 @@ export default function GamePlay({ gameState, onRoll, onSave, onHome, onSettings
           <div className="flex justify-center gap-4 mb-8 flex-wrap">
             {(isRolling ? Array(gameState.settings.dice.length).fill(1) : diceValues).map((value, index) => (
               <Dice 
-                key={index} 
+                key={`${currentPlayer.id}-${Date.now()}-${index}`} 
                 value={value} 
                 isRolling={isRolling}
                 color={currentPlayer.color}
@@ -103,6 +106,7 @@ export default function GamePlay({ gameState, onRoll, onSave, onHome, onSettings
           )}
 
           <button
+            type="button"
             onClick={rollDice}
             disabled={isRolling}
             className="w-full py-3 text-white rounded-lg transition-colors font-medium disabled:opacity-50"
@@ -115,12 +119,12 @@ export default function GamePlay({ gameState, onRoll, onSave, onHome, onSettings
         <div className="bg-white p-6 rounded-xl shadow-lg">
           <h2 className="text-xl font-semibold mb-4">Historique</h2>
           <div className="space-y-4 max-h-[400px] overflow-y-auto">
-            {gameState.rolls.map((roll, index) => {
+            {gameState.rolls.map((roll) => {
               const player = gameState.settings.players.find(p => p.id === roll.playerId);
               const RollAvatar = getAvatarIcon(player?.avatar || 'user');
               return (
                 <div
-                  key={index}
+                  key={roll.timestamp}
                   className="p-4 bg-gray-50 rounded-lg"
                 >
                   <div className="flex justify-between items-center mb-2">
